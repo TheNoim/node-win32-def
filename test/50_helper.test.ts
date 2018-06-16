@@ -245,7 +245,7 @@ describe(filename + ' :parse_windef()', () => {
     let _WIN64 = true
     try {
       H.parse_windef(W, map, { ...settingsDefault, _WIN64 })
-      assert(false, 'should throw error by isValidDataDef() BUT not')
+      assert(false, 'should throw error by validateWinData() BUT not')
     }
     catch (ex) {
       assert(true)
@@ -254,7 +254,7 @@ describe(filename + ' :parse_windef()', () => {
     _WIN64 = false
     try {
       H.parse_windef(W, map, { ...settingsDefault, _WIN64 })
-      assert(false, 'should throw error by isValidDataDef() BUT not')
+      assert(false, 'should throw error by validateWinData() BUT not')
     }
     catch (ex) {
       assert(true)
@@ -273,7 +273,7 @@ describe(filename + ' :parse_windef()', () => {
     let _UNICODE = true
     try {
       H.parse_windef(W, map, { ...settingsDefault, _UNICODE })
-      assert(false, 'should throw error by isValidDataDef() BUT not')
+      assert(false, 'should throw error by validateWinData() BUT not')
     }
     catch (ex) {
       assert(true)
@@ -282,7 +282,7 @@ describe(filename + ' :parse_windef()', () => {
     _UNICODE = false
     try {
       H.parse_windef(W, map, { ...settingsDefault, _UNICODE })
-      assert(false, 'should throw error by isValidDataDef() BUT not')
+      assert(false, 'should throw error by validateWinData() BUT not')
     }
     catch (ex) {
       assert(true)
