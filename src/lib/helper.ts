@@ -17,8 +17,9 @@ import {
 export function parse_windef(windefObj: DataTypes, macroMap: MacroMap, settings?: LoadSettings): DataTypes {
   const ww = clone_filter_windef(windefObj) // output without macroMap
   const macroSrc = prepare_macro(macroMap, settings)
-
   const ret = prepare_windef_ref(ww, macroSrc)
+
+  validateWinData(ret, windefSet)
   return ret
 }
 
@@ -113,7 +114,6 @@ function prepare_windef_ref(ww: DataTypes, macroSrc: Map<string, string>): DataT
       const vv = macroSrc.get(x)
 
       if (vv) {
-        validDataDef(vv, windefSet)
         map.set(x, vv)
       }
       else {
@@ -257,11 +257,21 @@ function _lookupRef(key: string, ww: DataTypes, macroSrc: Map<string, string>): 
 
 
 // valid parsed value exists in windefSet
-export function validDataDef(str: string, srcSet: Set<string>): void {
-  if (! str || typeof str !== 'string') {
-    throw new Error(`value of param invalid: ${str}`)
-  }
-  if (! srcSet.has(str)) {
-    throw new Error(`conifig.windefSet not contains element of ${str}`)
+export function isValidDataDef(key: string, srcSet: Set<string>): boolean {
+  return srcSet.has(key) ? true : false
+}
+
+export function validateWinData(windef: DataTypes, srcSet: Set<string>): void {
+  for (const [k, v] of Object.entries(windef)) {
+    if (! k || ! v) {
+      throw new Error(`validateWinData() k or v empty: "${k}"/"${v}"`)
+    }
+    if (typeof v !== 'string') {
+      throw new Error(`validateWinData() v not typeof string: "${k}"/"${v}"`)
+    }
+
+    if (! isValidDataDef(v, srcSet)) {
+      throw new Error(`validateWinData() value is invalid ffi param value: "${k}"/"${v}"`)
+    }
   }
 }
