@@ -361,6 +361,64 @@ describe(filename + ' :isValidDataDef()', () => {
 })
 
 
+describe(filename + ' :validateWinData()', () => {
+  const fnName = 'validateWinData()'
+
+  it(`Should ${fnName} works)`, () => {
+    const srcMap = new Set(['int'])
+
+    try {
+      H.validateWinData({ BOOL: 'int' }, srcMap)
+      assert(true)
+    }
+    catch (ex) {
+      return assert(false, 'should passed, but throw error')
+    }
+
+    try {
+      H.validateWinData({ BOOL: 'float' }, srcMap)
+      return assert(false, 'should throw error with invalid value, but NOT')
+    }
+    catch (ex) {
+      assert(true)
+    }
+
+    try {
+      H.validateWinData({ [Symbol.for('test')] : 'int' }, srcMap)
+      return assert(false, 'should throw error with invalid value, but NOT')
+    }
+    catch (ex) {
+      assert(true)
+    }
+
+    try {
+      H.validateWinData({ 7 : 'int' }, srcMap)
+      return assert(false, 'should throw error with invalid value, but NOT')
+    }
+    catch (ex) {
+      assert(true)
+    }
+
+    try {
+      H.validateWinData({ '': 'int' }, srcMap)
+      return assert(false, 'should throw error with invalid value, but NOT')
+    }
+    catch (ex) {
+      assert(true)
+    }
+
+    try {
+      H.validateWinData({ '': 'float' }, srcMap)
+      return assert(false, 'should throw error with invalid value, but NOT')
+    }
+    catch (ex) {
+      assert(true)
+    }
+
+  })
+})
+
+
 describe(filename + ' :prepare_windef_ref()', () => {
   const fnName = 'prepare_windef_ref'
   const fn = <(
