@@ -18,7 +18,8 @@ export function parse_windef(windefObj: DataTypes, macroMap: MacroMap, settings?
   const ww = clone_filter_windef(windefObj) // output without macroMap
   const macroSrc = prepare_macro(macroMap, settings)
 
-  return prepare_windef_ref(ww, macroSrc)
+  const ret = prepare_windef_ref(ww, macroSrc)
+  return ret
 }
 
 
@@ -129,28 +130,28 @@ function prepare_windef_ref(ww: DataTypes, macroSrc: Map<string, string>): DataT
     if (map.has(k)) {
       continue
     }
-    const value = retrieve_ref_value(ww, k, map)
-    value && windefSet.has(value) && map.set(k, value)
+    // const value = retrieve_ref_value(ww, k, map)
+    // value && windefSet.has(value) && map.set(k, value)
 
-    // if (typeof v === 'string') {
-    //   if (windefSet.has(v)) {
-    //     map.set(k, v)
-    //   }
-    //   else {
-    //     const value = lookupRef(v, ww, macroSrc)
+    if (typeof v === 'string') {
+      if (windefSet.has(v)) {
+        map.set(k, v)
+      }
+      else {
+        const value = lookupRef(v, ww, macroSrc)
 
-    //     // tslint:disable-next-line
-    //     if (typeof value === 'string' && value) {
-    //       map.set(k, v)
-    //     }
-    //     else {
-    //       map.set(k, v) // maybe invalid for windefSet, will validateWinData() later
-    //     }
-    //   }
-    // }
-    // else {
-    //   throw new Error(`prepare_windef_ref() missing entry for k/v: ${k}/${v}`)
-    // }
+        // tslint:disable-next-line
+        if (typeof value === 'string' && value) {
+          map.set(k, value)
+        }
+        else {
+          map.set(k, v) // maybe invalid for windefSet, will validateWinData() later
+        }
+      }
+    }
+    else {
+      throw new Error(`prepare_windef_ref() missing entry for k/v: ${k}/${v}`)
+    }
   }
 
   map.forEach((v, k) => {
@@ -190,7 +191,7 @@ function parse_settings(settings?: LoadSettings): LoadSettings {
   return st
 }
 
-function retrieve_ref_value(ww: DataTypes, key: string, srcMap: Map<string, string>): string {
+export function retrieve_ref_value(ww: DataTypes, key: string, srcMap: Map<string, string>): string {
   const mapValue = srcMap.get(key)
 
   if (mapValue) {
@@ -212,7 +213,7 @@ function retrieve_ref_value(ww: DataTypes, key: string, srcMap: Map<string, stri
   return refValue ? refValue : value
 }
 
-function lookupRef(key: string, ww: DataTypes, macroSrc: Map<string, string>): string {
+export function lookupRef(key: string, ww: DataTypes, macroSrc: Map<string, string>): string {
   let ret = _lookupRef(key, ww, macroSrc)
 
   if (! ret) {
